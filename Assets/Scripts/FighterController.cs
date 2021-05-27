@@ -7,9 +7,11 @@ using ExitGames.Client.Photon;
 [RequireComponent(typeof(Rigidbody2D))]
 public class FighterController : MonoBehaviour
 {
+    /// <summary>移動する時にかける力</summary>
     [SerializeField] float m_movePower = 5f;
-    Rigidbody2D m_rb = null;
+    /// <summary>移動キーの入力方向</summary>
     float m_h, m_v;
+    Rigidbody2D m_rb = null;
     Animator m_anim = null;
     PhotonView m_view = null;
 
@@ -67,15 +69,20 @@ public class FighterController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 死んだときに呼び出す
+    /// </summary>
     void Die()
     {
         Debug.Log("Die");
 
+        // イベントを raise する
         RaiseEventOptions raiseEventoptions = new RaiseEventOptions();
         raiseEventoptions.Receivers = ReceiverGroup.All;
         SendOptions sendOptions = new SendOptions();
         PhotonNetwork.RaiseEvent((byte)NetworkEvents.Die, null, raiseEventoptions, sendOptions);
 
+        // オブジェクトを破棄する
         PhotonNetwork.Destroy(m_view);
     }
 }

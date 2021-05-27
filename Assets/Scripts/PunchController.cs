@@ -14,6 +14,7 @@ public class PunchController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        // 接触相手がプレイヤーだったら弾き飛ばすための関数を RPC で呼び出す
         if (m_view && m_view.IsMine && collision.gameObject.CompareTag("Player"))
         {
             PhotonView view = collision.gameObject.GetComponent<PhotonView>();
