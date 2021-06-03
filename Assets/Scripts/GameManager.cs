@@ -2,6 +2,7 @@
 using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
+using UnityEngine.UI;
 
 /// <summary>
 /// ゲームを管理するコンポーネント
@@ -19,6 +20,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     bool m_inGame = false;
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
+    //Gameの開始を伝えるTextを入れる
+    [SerializeField] Text m_gameStart;
 
     private void OnEnable()
     {
@@ -41,6 +44,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             {
                 m_generateObstacleTimer = 0;
                 GenerateObstacle();
+                //GameStartのTextを消す
+                GameStartTextEnd();
             }
         }
     }
@@ -51,6 +56,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             case (byte)NetworkEvents.GameStart:
                 Debug.Log("Game Start");
+                GameStart();
                 m_inGame = true;
                 break;
             case (byte)NetworkEvents.Die:
@@ -88,6 +94,16 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
+    }
+
+    public void GameStart()
+    {
+        m_gameStart.enabled = true;
+    }
+
+    public void GameStartTextEnd()
+    {
+        m_gameStart.enabled = false;
     }
 }
 
