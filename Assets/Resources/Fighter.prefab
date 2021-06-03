@@ -124,6 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fece47b4c0ef3984a8a408d4e44d3699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_playerColor: []
   m_movePower: 40
 --- !u!70 &1250390395860237516
 CapsuleCollider2D:
@@ -208,7 +209,7 @@ MonoBehaviour:
   - {fileID: 1250390395860237511}
   - {fileID: 1250390395860237504}
   - {fileID: 1250390395860237505}
-  sceneViewId: 1
+  sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &1250390395860237511
@@ -396,6 +397,6 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents: []
-  sceneViewId: 2
+  sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

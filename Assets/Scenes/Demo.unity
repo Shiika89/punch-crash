@@ -700,6 +700,56 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 357168910}
     m_Modifications:
+    - target: {fileID: 1250390395860237510, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250390395860237512, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: m_playerColor.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250390395860237512, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: m_playerColor.Array.data[0].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250390395860237512, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: m_playerColor.Array.data[0].g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250390395860237512, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: m_playerColor.Array.data[0].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250390395860237512, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: m_playerColor.Array.data[0].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250390395860237512, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: m_playerColor.Array.data[1].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250390395860237512, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: m_playerColor.Array.data[1].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250390395860237512, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: m_playerColor.Array.data[1].g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250390395860237512, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: m_playerColor.Array.data[1].b
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1250390395860237513, guid: 848e4181644c2634c9fc590bc2a0d9ee,
         type: 3}
       propertyPath: m_Name
@@ -759,6 +809,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700198479583593816, guid: 848e4181644c2634c9fc590bc2a0d9ee,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 848e4181644c2634c9fc590bc2a0d9ee, type: 3}
@@ -823,6 +878,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355902584810705065, guid: ce21dcab6c0e8814fb6b2a9045b2bdb7,
+        type: 3}
+      propertyPath: sceneViewId
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4355902584810705071, guid: ce21dcab6c0e8814fb6b2a9045b2bdb7,
         type: 3}
