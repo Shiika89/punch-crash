@@ -7,6 +7,7 @@ using ExitGames.Client.Photon;
 [RequireComponent(typeof(Rigidbody2D))]
 public class FighterController : MonoBehaviour
 {
+    /// <summary>自機の色の候補</summary>
     [SerializeField] Color[] m_playerColor = default;
     /// <summary>移動する時にかける力</summary>
     [SerializeField] float m_movePower = 5f;
@@ -90,17 +91,7 @@ public class FighterController : MonoBehaviour
     }
     void ChangeColor()
     {
-        if (m_view.IsMine)
-        {
-            GetComponent<SpriteRenderer>().material.color = Color.red;
-            //m_playerColor[0] = GetComponent<SpriteRenderer>().material.color;
-        }
-        else
-        {
-            GetComponent<SpriteRenderer>().material.color = Color.white;
-            //m_playerColor[1] = GetComponent<SpriteRenderer>().material.color;
-        }
-        //m_view.OwnerActorNr = 1;
-        //PhotonNetwork.LocalPlayer.ActorNumber;
+        int colorIndex = (PhotonNetwork.LocalPlayer.ActorNumber - 1) % m_playerColor.Length; 
+        GetComponent<SpriteRenderer>().color = m_playerColor[colorIndex];
     }
 }
