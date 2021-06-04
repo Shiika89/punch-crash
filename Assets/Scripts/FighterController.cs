@@ -91,7 +91,7 @@ public class FighterController : MonoBehaviour
     }
     void ChangeColor()
     {
-        int colorIndex = (PhotonNetwork.LocalPlayer.ActorNumber - 1) % m_playerColor.Length; 
+        int colorIndex = (m_view.OwnerActorNr - 1) % m_playerColor.Length; 
         GetComponent<SpriteRenderer>().color = m_playerColor[colorIndex];
     }
 }
