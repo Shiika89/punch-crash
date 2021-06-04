@@ -45,16 +45,18 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         if (PhotonNetwork.IsMasterClient && m_inGame)
         {
             m_generateObstacleTimer += Time.deltaTime;
-            m_startTextTimer += Time.deltaTime;
+            
 
             if (m_generateObstacleTimer > m_generateObstacleInterval)
             {
                 m_generateObstacleTimer = 0;
                 GenerateObstacle();
-                //GameStartのTextを消す
-                GameStartTextEnd();
             }
-            if (m_startTextTimer >= m_startTextInterval)
+        }
+        if (m_inGame)
+        {
+            m_startTextTimer += Time.deltaTime;
+            if (m_startTextTimer > m_startTextInterval)
             {
                 GameStartTextEnd();
             }
