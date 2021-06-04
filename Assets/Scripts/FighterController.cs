@@ -7,6 +7,8 @@ using ExitGames.Client.Photon;
 [RequireComponent(typeof(Rigidbody2D))]
 public class FighterController : MonoBehaviour
 {
+    /// <summary>自機の色の候補</summary>
+    [SerializeField] Color[] m_playerColor = default;
     /// <summary>移動する時にかける力</summary>
     [SerializeField] float m_movePower = 5f;
     /// <summary>移動キーの入力方向</summary>
@@ -20,10 +22,12 @@ public class FighterController : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         m_anim = GetComponent<Animator>();
         m_view = GetComponent<PhotonView>();
+        ChangeColor();
     }
 
     void Update()
     {
+
         if (!m_view || !m_view.IsMine) return;      // 自分が生成したものだけ処理する
 
         m_h = Input.GetAxisRaw("Horizontal");
@@ -84,5 +88,10 @@ public class FighterController : MonoBehaviour
 
         // オブジェクトを破棄する
         PhotonNetwork.Destroy(m_view);
+    }
+    void ChangeColor()
+    {
+        int colorIndex = (m_view.OwnerActorNr - 1) % m_playerColor.Length; 
+        GetComponent<SpriteRenderer>().color = m_playerColor[colorIndex];
     }
 }
