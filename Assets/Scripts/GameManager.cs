@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     [SerializeField] float m_generateObstacleInterval = 1f;
     /// <summary>ゲーム中かどうかを判断するフラグ</summary>
     bool m_inGame = false;
+    public bool InGame { get { return m_inGame; } }
+
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
     //Gameの開始を伝えるTextを入れる
