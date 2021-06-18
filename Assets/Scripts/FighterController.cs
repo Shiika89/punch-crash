@@ -17,6 +17,10 @@ public class FighterController : MonoBehaviour
     Animator m_anim = null;
     PhotonView m_view = null;
 
+    public AudioClip clip01;
+    public AudioClip clip02;
+    public AudioClip clip03;
+
     void Start()
     {
         m_rb = GetComponent<Rigidbody2D>();
@@ -37,6 +41,12 @@ public class FighterController : MonoBehaviour
         {
             m_anim.SetBool("Punch", Input.GetButtonDown("Fire1"));
         }
+    }
+
+    /// <summary>パンチした時の音</summary>
+    void PunchAudio()
+    {
+        AudioSource.PlayClipAtPoint(clip01, transform.position);
     }
 
     void FixedUpdate()
@@ -68,7 +78,16 @@ public class FighterController : MonoBehaviour
         {
             if (m_view.IsMine)
             {
+                AudioSource.PlayClipAtPoint(clip02, transform.position);
                 Die();
+            }
+        }
+
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            if (m_view.IsMine)
+            {
+                AudioSource.PlayClipAtPoint(clip03, transform.position);
             }
         }
     }
