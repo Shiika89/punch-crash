@@ -17,6 +17,13 @@ public class FighterController : MonoBehaviour
     Animator m_anim = null;
     PhotonView m_view = null;
 
+    /// <summary>パンチの音</summary>
+    [SerializeField] private AudioClip clip01;
+    /// <summary>壁にぶつかる音</summary>
+    [SerializeField] private AudioClip clip02;
+    /// <summary>死んだ音</summary>
+    [SerializeField] private AudioClip clip03;
+
     void Start()
     {
         m_rb = GetComponent<Rigidbody2D>();
@@ -37,6 +44,12 @@ public class FighterController : MonoBehaviour
         {
             m_anim.SetBool("Punch", Input.GetButtonDown("Fire1"));
         }
+    }
+
+    /// <summary>パンチした時の音</summary>
+    void PunchAudio()
+    {
+        AudioSource.PlayClipAtPoint(clip01, transform.position);
     }
 
     void FixedUpdate()
@@ -71,6 +84,15 @@ public class FighterController : MonoBehaviour
                 Die();
             }
         }
+
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            if (m_view.IsMine)
+            {
+                //壁にぶつかった時の音
+                AudioSource.PlayClipAtPoint(clip03, transform.position);
+            }
+        }
     }
 
     /// <summary>
@@ -85,7 +107,8 @@ public class FighterController : MonoBehaviour
         raiseEventoptions.Receivers = ReceiverGroup.All;
         SendOptions sendOptions = new SendOptions();
         PhotonNetwork.RaiseEvent((byte)NetworkEvents.Die, null, raiseEventoptions, sendOptions);
-
+        // 死んだ時に音を出す
+        AudioSource.PlayClipAtPoint(clip02, transform.position);
         // オブジェクトを破棄する
         PhotonNetwork.Destroy(m_view);
     }
