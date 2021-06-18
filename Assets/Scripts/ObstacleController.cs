@@ -5,6 +5,7 @@ using Photon.Pun;
 /// <summary>
 /// 障害物を制御するコンポーネント
 /// </summary>
+[RequireComponent(typeof(Rigidbody2D))]
 public class ObstacleController : MonoBehaviour
 {
     /// <summary>移動速度</summary>
@@ -12,10 +13,12 @@ public class ObstacleController : MonoBehaviour
     /// <summary>移動方向</summary>
     [SerializeField] Vector2 m_moveDirection = Vector2.down;
     PhotonView m_view = default;
+    Rigidbody2D m_rb = default;
 
     void Start()
     {
         m_view = GetComponent<PhotonView>();
+        m_rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -23,7 +26,7 @@ public class ObstacleController : MonoBehaviour
         // オーナー側で移動させる
         if (m_view && m_view.IsMine)
         {
-            transform.Translate(m_moveSpeed * m_moveDirection * Time.deltaTime);
+            m_rb.MovePosition((Vector2)this.transform.position + m_moveSpeed * m_moveDirection * Time.deltaTime);
 
             // 画面外に消えていたら破棄する
             if (transform.position.y < - 10f)
