@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         if (PhotonNetwork.IsMasterClient && m_inGame)
         {
             m_generateObstacleTimer += Time.deltaTime;
-            
+
 
             if (m_generateObstacleTimer > m_generateObstacleInterval)
             {
@@ -91,7 +91,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
 
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.Instantiate(m_obstaclePrefabName, m_obstacleSpawnPoints[i].position, Quaternion.identity);
+            var go = PhotonNetwork.Instantiate(m_obstaclePrefabName, m_obstacleSpawnPoints[i].position, Quaternion.identity);
+            go.transform.Rotate(Vector3.forward, Random.Range(0, 360f));
         }
     }
 
