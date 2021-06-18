@@ -17,9 +17,12 @@ public class FighterController : MonoBehaviour
     Animator m_anim = null;
     PhotonView m_view = null;
 
-    public AudioClip clip01;
-    public AudioClip clip02;
-    public AudioClip clip03;
+    /// <summary>パンチの音</summary>
+    [SerializeField] private AudioClip clip01;
+    /// <summary>壁にぶつかる音</summary>
+    [SerializeField] private AudioClip clip02;
+    /// <summary>死んだ音</summary>
+    [SerializeField] private AudioClip clip03;
 
     void Start()
     {
@@ -78,7 +81,6 @@ public class FighterController : MonoBehaviour
         {
             if (m_view.IsMine)
             {
-                AudioSource.PlayClipAtPoint(clip02, transform.position);
                 Die();
             }
         }
@@ -87,6 +89,7 @@ public class FighterController : MonoBehaviour
         {
             if (m_view.IsMine)
             {
+                //壁にぶつかった時の音
                 AudioSource.PlayClipAtPoint(clip03, transform.position);
             }
         }
@@ -104,7 +107,8 @@ public class FighterController : MonoBehaviour
         raiseEventoptions.Receivers = ReceiverGroup.All;
         SendOptions sendOptions = new SendOptions();
         PhotonNetwork.RaiseEvent((byte)NetworkEvents.Die, null, raiseEventoptions, sendOptions);
-
+        // 死んだ時に音を出す
+        AudioSource.PlayClipAtPoint(clip02, transform.position);
         // オブジェクトを破棄する
         PhotonNetwork.Destroy(m_view);
     }
