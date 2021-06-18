@@ -2,6 +2,7 @@
 using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
+using UnityEngine.UI;
 
 /// <summary>
 /// ゲームを管理するコンポーネント
@@ -21,6 +22,12 @@ public class GameManager : MonoBehaviour, IOnEventCallback
 
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
+    //Gameの開始を伝えるTextを入れる
+    [SerializeField] Text m_gameStart;
+    //GameStartのテキストを消すためのタイマー
+    float m_startTextTimer;
+    //GameStartのテキストを表示している間隔
+    [SerializeField] float m_startTextInterval = 5f;
 
     private void OnEnable()
     {
@@ -38,11 +45,20 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         if (PhotonNetwork.IsMasterClient && m_inGame)
         {
             m_generateObstacleTimer += Time.deltaTime;
+            
 
             if (m_generateObstacleTimer > m_generateObstacleInterval)
             {
                 m_generateObstacleTimer = 0;
                 GenerateObstacle();
+            }
+        }
+        if (m_inGame)
+        {
+            m_startTextTimer += Time.deltaTime;
+            if (m_startTextTimer > m_startTextInterval)
+            {
+                GameStartTextEnd();
             }
         }
     }
@@ -54,6 +70,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             case (byte)NetworkEvents.GameStart:
                 Debug.Log("Game Start");
                 m_inGame = true;
+                GameStartText();
                 break;
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
@@ -90,6 +107,16 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
+    }
+
+    public void GameStartText()
+    {
+        m_gameStart.enabled = true;
+    }
+
+    public void GameStartTextEnd()
+    {
+        m_gameStart.enabled = false;
     }
 }
 
