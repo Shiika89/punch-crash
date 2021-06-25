@@ -15,7 +15,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime �
     private void Awake()
     {
         // シーンの自動同期は無効にする（シーン切り替えがない時は意味はない）
-        PhotonNetwork.AutomaticallySyncScene = false;
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     private void Start()

@@ -121,8 +121,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             {
                 m_gameStart.enabled = false;
             }
-            Debug.Log("プレイヤー1win");
-            m_p1win.enabled = true;
+            Debug.Log("プレイヤー2win");
+            m_p2win.enabled = true;
         }
         else
         {
@@ -130,8 +130,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             {
                 m_gameStart.enabled = false;
             }
-            Debug.Log("プレイヤー2win");
-            m_p2win.enabled = true;
+            Debug.Log("プレイヤー1win");
+            m_p1win.enabled = true;
         }
     }
 
@@ -147,8 +147,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     public void OnClickPanel()
     {
         Debug.Log("シーンをリロード");
-        //シーンのリロード,現状同期できていないので別の方法を考えるか同期させる
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 
