@@ -3,6 +3,7 @@
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class FighterController : MonoBehaviour
@@ -23,6 +24,12 @@ public class FighterController : MonoBehaviour
     [SerializeField] private AudioClip clip02;
     /// <summary>死んだ音</summary>
     [SerializeField] private AudioClip clip03;
+
+    // プレイヤー名を表示するためのpanel
+    private GridLayoutGroup _gridLayoutGroup = null;
+    //プレイヤー名を表示するテキスト
+    [SerializeField]
+    private Text m_name =  null;
 
     void Start()
     {
@@ -116,5 +123,17 @@ public class FighterController : MonoBehaviour
     {
         int colorIndex = (m_view.OwnerActorNr - 1) % m_playerColor.Length; 
         GetComponent<SpriteRenderer>().color = m_playerColor[colorIndex];
+        PlayerName(colorIndex);
+    }
+    public void PlayerName(int colorIndex)
+    {
+        if (!m_view || !m_view.IsMine) return;
+        GameObject _name = GameObject.Find("Name");
+        _gridLayoutGroup = _name.GetComponent<GridLayoutGroup>();
+        var parent = _gridLayoutGroup.gameObject.transform;
+        var player_name = Instantiate(m_name);
+        player_name.transform.SetParent(parent);
+        player_name.color = m_playerColor[colorIndex];
+        player_name.text = "player" + (colorIndex + 1);
     }
 }
