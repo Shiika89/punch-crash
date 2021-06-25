@@ -139,6 +139,7 @@ MonoBehaviour:
   clip01: {fileID: 8300000, guid: 7fe2b09ebf2d54e4db65564518859470, type: 3}
   clip02: {fileID: 8300000, guid: 6e65ee997e334794d82bfdaa49205e63, type: 3}
   clip03: {fileID: 8300000, guid: a1f4f317cd2204c44893f1e28be81d5b, type: 3}
+  clip04: {fileID: 8300000, guid: 71f05ab473baf494ba9e4622d013fad6, type: 3}
 --- !u!70 &1250390395860237516
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
