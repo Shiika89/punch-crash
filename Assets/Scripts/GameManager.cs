@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     float m_startTextTimer;
     //GameStartのテキストを表示している間隔
     [SerializeField] float m_startTextInterval = 5f;
-
+    AudioSource bgm;
     private void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
@@ -71,10 +71,12 @@ public class GameManager : MonoBehaviour, IOnEventCallback
                 Debug.Log("Game Start");
                 m_inGame = true;
                 GameStartText();
+                GameBgm();
                 break;
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
                 Debug.Log("Finish Game");   // 現時点では二人プレイなので一人死んだらゲームは終わり。三人以上でプレイできるようにした場合は修正する必要がある。
+                GameBgm();
                 FinishGame();
                 break;
             default:
@@ -110,6 +112,19 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         }
     }
 
+    private void GameBgm()
+    {
+        if (m_inGame)
+        {
+            bgm = GetComponent<AudioSource>();
+            bgm.Play();
+        }
+        else
+        {
+            bgm.Stop();
+        }
+
+    }
     public void GameStartText()
     {
         m_gameStart.enabled = true;
