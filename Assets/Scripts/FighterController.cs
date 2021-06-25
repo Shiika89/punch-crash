@@ -16,6 +16,7 @@ public class FighterController : MonoBehaviour
     Rigidbody2D m_rb = null;
     Animator m_anim = null;
     PhotonView m_view = null;
+    GameManager m_gm = null;
 
     /// <summary>パンチの音</summary>
     [SerializeField] AudioClip clip01;
@@ -31,6 +32,7 @@ public class FighterController : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         m_anim = GetComponent<Animator>();
         m_view = GetComponent<PhotonView>();
+        m_gm = FindObjectOfType<GameManager>();
         ChangeColor();
     }
 
@@ -58,8 +60,11 @@ public class FighterController : MonoBehaviour
     {
         if (!m_view || !m_view.IsMine) return;      // 自分が生成したものだけ処理する
 
-        Vector2 dir = new Vector2(m_h, m_v).normalized;
-        m_rb.AddForce(dir * m_movePower, ForceMode2D.Force);
+        if (m_gm.InGame)
+        {
+            Vector2 dir = new Vector2(m_h, m_v).normalized;
+            m_rb.AddForce(dir * m_movePower, ForceMode2D.Force);
+        }
 
         if (m_rb.velocity != Vector2.zero)
         {
