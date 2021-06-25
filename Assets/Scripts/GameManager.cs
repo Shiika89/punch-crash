@@ -3,7 +3,6 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// ゲームを管理するコンポーネント
@@ -20,20 +19,16 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     /// <summary>ゲーム中かどうかを判断するフラグ</summary>
     bool m_inGame = false;
     public bool InGame { get { return m_inGame; } }
-    PhotonView m_view = null;
+
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
     //Gameの開始を伝えるTextを入れる
     [SerializeField] Text m_gameStart;
-    //player1が勝った場合のTextを入れる
-    [SerializeField] Text m_p1win;
-    //player2が勝った場合のTextを入れる
-    [SerializeField] Text m_p2win;
     //GameStartのテキストを消すためのタイマー
     float m_startTextTimer;
     //GameStartのテキストを表示している間隔
     [SerializeField] float m_startTextInterval = 5f;
-
+    AudioSource bgm;
     private void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
@@ -76,11 +71,13 @@ public class GameManager : MonoBehaviour, IOnEventCallback
                 Debug.Log("Game Start");
                 m_inGame = true;
                 GameStartText();
+                GameBgm();
                 break;
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
                 Debug.Log("Finish Game");   // 現時点では二人プレイなので一人死んだらゲームは終わり。三人以上でプレイできるようにした場合は修正する必要がある。
-                FinishGame(photonEvent);
+                GameBgm();
+                FinishGame();
                 break;
             default:
                 break;
@@ -104,9 +101,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     /// <summary>
     /// ゲームを終了する
     /// </summary>
-    void FinishGame(ExitGames.Client.Photon.EventData photonEvent)
+    void FinishGame()
     {
-        m_view = GetComponent<PhotonView>();
         m_inGame = false;
 
         // Master Client 側から全ての障害物を破棄する
@@ -114,27 +110,21 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
-        //勝ったほうのプレイヤー（actornumberが１だったらp1そうじゃなければp2{三人以上のでプレイできるようにしたい場合は修正}）の勝利をだしてhitanykeyでシーンをリロードする
-        if (photonEvent.Sender == 1)
+    }
+
+    private void GameBgm()
+    {
+        if (m_inGame)
         {
-            if (m_gameStart.enabled)
-            {
-                m_gameStart.enabled = false;
-            }
-            Debug.Log("プレイヤー2win");
-            m_p2win.enabled = true;
+            bgm = GetComponent<AudioSource>();
+            bgm.Play();
         }
         else
         {
-            if (m_gameStart.enabled)
-            {
-                m_gameStart.enabled = false;
-            }
-            Debug.Log("プレイヤー1win");
-            m_p1win.enabled = true;
+            bgm.Stop();
         }
-    }
 
+    }
     public void GameStartText()
     {
         m_gameStart.enabled = true;
@@ -143,11 +133,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     public void GameStartTextEnd()
     {
         m_gameStart.enabled = false;
-    }
-    public void OnClickPanel()
-    {
-        Debug.Log("シーンをリロード");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 
