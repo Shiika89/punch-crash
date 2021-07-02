@@ -3,6 +3,7 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// ゲームを管理するコンポーネント
@@ -20,10 +21,15 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     bool m_inGame = false;
     public bool InGame { get { return m_inGame; } }
 
+    PhotonView m_view = null;
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
     //Gameの開始を伝えるTextを入れる
     [SerializeField] Text m_gameStart;
+    //player1が勝った場合のTextを入れる
+    [SerializeField] Text m_p1win;
+    //player2が勝った場合のTextを入れる
+    [SerializeField] Text m_p2win;
     //GameSatrtTextのアニメーション
     Animator m_startTextAnim;
 
@@ -66,7 +72,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
                 Debug.Log("Finish Game");   // 現時点では二人プレイなので一人死んだらゲームは終わり。三人以上でプレイできるようにした場合は修正する必要がある。
-                FinishGame();
+                FinishGame(photonEvent);
                 break;
             default:
                 break;
@@ -90,8 +96,9 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     /// <summary>
     /// ゲームを終了する
     /// </summary>
-    void FinishGame()
+    void FinishGame(ExitGames.Client.Photon.EventData photonEvent)
     {
+        m_view = GetComponent<PhotonView>();
         m_inGame = false;
 
         // Master Client 側から全ての障害物を破棄する
@@ -99,6 +106,21 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
+        //勝ったほうのプレイヤー（actornumberが１だったらp1そうじゃなければp2{三人以上のでプレイできるようにしたい場合は修正}）の勝利をだしてhitanykeyでシーンをリロードする
+        if (photonEvent.Sender == 2)
+        {
+            Debug.Log("プレイヤー1win");
+            m_p1win.enabled = true;
+        }
+        else
+        {
+            Debug.Log("プレイヤー2win");
+            m_p2win.enabled = true;
+        }
+    }
+    public void OnClickPanel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 
