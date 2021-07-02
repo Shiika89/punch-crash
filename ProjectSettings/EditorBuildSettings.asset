@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Kita-PlayerName.unity
-    guid: fb403ed5121967b4c967a25082106c4f
-  - enabled: 0
-    path: Assets/Scenes/change-obstacle.unity
-    guid: 6223f31dc894c1645805a08fe16b6cf7
+    path: Assets/Scenes/Demo.unity
+    guid: 088b355d5a300b04c84874e2a88f6cc7
   m_configObjects: {}
