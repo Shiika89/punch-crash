@@ -28,11 +28,10 @@ public class FighterController : MonoBehaviour
     /// <summary>爆発した音</summary>
     [SerializeField] AudioClip clip04;
 
-    // プレイヤー名を表示するためのpanel
-    private GridLayoutGroup _gridLayoutGroup = null;
+    // プレイヤー名を表示するアンカーオブジェクトの名前
+    string m_playerNameAnchorName = "Name";
     //プレイヤー名を表示するテキスト
-    [SerializeField]
-    private Text m_name =  null;
+    [SerializeField] Text m_nameText = default;
 
     void Start()
     {
@@ -146,12 +145,10 @@ public class FighterController : MonoBehaviour
     public void PlayerName(int colorIndex)
     {
         if (!m_view || !m_view.IsMine) return;
-        GameObject _name = GameObject.Find("Name");
-        _gridLayoutGroup = _name.GetComponent<GridLayoutGroup>();
-        var parent = _gridLayoutGroup.gameObject.transform;
-        var player_name = Instantiate(m_name);
-        player_name.transform.SetParent(parent);
-        player_name.color = m_playerColor[colorIndex];
-        player_name.text = "player" + (colorIndex + 1);
+        
+        GameObject nameAnchor = GameObject.Find(m_playerNameAnchorName);
+        var playerNameText = Instantiate(m_nameText, nameAnchor.transform);
+        playerNameText.color = m_playerColor[colorIndex];
+        playerNameText.text = "player" + (colorIndex + 1);
     }
 }
