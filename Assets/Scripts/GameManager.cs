@@ -24,10 +24,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     float m_generateObstacleTimer;
     //Gameの開始を伝えるTextを入れる
     [SerializeField] Text m_gameStart;
-    //GameStartのテキストを消すためのタイマー
-    float m_startTextTimer;
-    //GameStartのテキストを表示している間隔
-    [SerializeField] float m_startTextInterval = 5f;
+    //GameSatrtTextのアニメーション
+    Animator m_startTextAnim;
 
     private void OnEnable()
     {
@@ -53,14 +51,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback
                 GenerateObstacle();
             }
         }
-        if (m_inGame)
-        {
-            m_startTextTimer += Time.deltaTime;
-            if (m_startTextTimer > m_startTextInterval)
-            {
-                GameStartTextEnd();
-            }
-        }
     }
 
     void IOnEventCallback.OnEvent(ExitGames.Client.Photon.EventData photonEvent)
@@ -70,7 +60,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             case (byte)NetworkEvents.GameStart:
                 Debug.Log("Game Start");
                 m_inGame = true;
-                GameStartText();
+                m_startTextAnim = m_gameStart.GetComponent<Animator>();
+                m_startTextAnim.SetTrigger("GameStartText");
                 break;
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
@@ -108,16 +99,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
-    }
-
-    public void GameStartText()
-    {
-        m_gameStart.enabled = true;
-    }
-
-    public void GameStartTextEnd()
-    {
-        m_gameStart.enabled = false;
     }
 }
 
