@@ -3,6 +3,7 @@
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class FighterController : MonoBehaviour
@@ -26,6 +27,11 @@ public class FighterController : MonoBehaviour
     [SerializeField] AudioClip clip03;
     /// <summary>爆発した音</summary>
     [SerializeField] AudioClip clip04;
+
+    // プレイヤー名を表示するアンカーオブジェクトの名前
+    string m_playerNameAnchorName = "Name";
+    //プレイヤー名を表示するテキスト
+    [SerializeField] Text m_nameText = default;
 
     void Start()
     {
@@ -134,5 +140,15 @@ public class FighterController : MonoBehaviour
     {
         int colorIndex = (m_view.OwnerActorNr - 1) % m_playerColor.Length; 
         GetComponent<SpriteRenderer>().color = m_playerColor[colorIndex];
+        PlayerName(colorIndex);
+    }
+    public void PlayerName(int colorIndex)
+    {
+        if (!m_view || !m_view.IsMine) return;
+        
+        GameObject nameAnchor = GameObject.Find(m_playerNameAnchorName);
+        var playerNameText = Instantiate(m_nameText, nameAnchor.transform);
+        playerNameText.color = m_playerColor[colorIndex];
+        playerNameText.text = "player" + (colorIndex + 1);
     }
 }
