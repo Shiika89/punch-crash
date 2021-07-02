@@ -140,6 +140,7 @@ MonoBehaviour:
   clip02: {fileID: 8300000, guid: 6e65ee997e334794d82bfdaa49205e63, type: 3}
   clip03: {fileID: 8300000, guid: a1f4f317cd2204c44893f1e28be81d5b, type: 3}
   clip04: {fileID: 8300000, guid: a2179ebcfbb38034fb963906c5188247, type: 3}
+  m_name: {fileID: 8797430495130779560, guid: d58dff0ff6703814983015d33f16e8d2, type: 3}
 --- !u!70 &1250390395860237516
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
