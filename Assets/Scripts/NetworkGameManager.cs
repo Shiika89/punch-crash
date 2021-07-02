@@ -11,6 +11,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime �
     [SerializeField] string m_playerPrefabName = "Prefab";
     /// <summary>プレイヤーを生成する場所を示すアンカーのオブジェクト</summary>
     [SerializeField] Transform[] m_spawnPositions = default;
+    /// <summary>2人揃わなくてもゲームが開始してDebug出来るようにするための変数</summary>
+    [SerializeField] bool m_DebugMode = false;
 
     private void Awake()
     {
@@ -111,7 +113,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime �
          * 部屋を閉じないと、最大人数から減った時に次のユーザーが入ってきてしまう。
          * 現状のコードではユーザーが最大人数から減った際の追加入室を考慮していないため、追加入室させたい場合は実装を変更する必要がある。
          * **************************************************/
-        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount > PhotonNetwork.CurrentRoom.MaxPlayers - 1)
+        if (m_DebugMode || PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount > PhotonNetwork.CurrentRoom.MaxPlayers - 1)
         {
             Debug.Log("Closing Room");
             PhotonNetwork.CurrentRoom.IsOpen = false;
@@ -180,6 +182,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime �
     {
         Debug.Log("OnJoinedRoom");
         SpawnPlayer();
+        CheckPlayerCountAndStartGame();   //1人でもゲームを開始出来るため
     }
 
     /// <summary>指定した部屋への入室に失敗した時</summary>
