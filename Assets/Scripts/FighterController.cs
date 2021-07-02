@@ -23,10 +23,8 @@ public class FighterController : MonoBehaviour
     [SerializeField] AudioClip clip01;
     /// <summary>壁にぶつかる音</summary>
     [SerializeField] AudioClip clip02;
-    /// <summary>飛ばされた音</summary>
-    [SerializeField] AudioClip clip03;
     /// <summary>爆発した音</summary>
-    [SerializeField] AudioClip clip04;
+    [SerializeField] AudioClip clip03;
 
     // プレイヤー名を表示するアンカーオブジェクトの名前
     string m_playerNameAnchorName = "Name";
@@ -94,18 +92,6 @@ public class FighterController : MonoBehaviour
         {
             if (m_view.IsMine)
             {
-                // 飛ばされ死んだ時に音を出す
-                AudioSource.PlayClipAtPoint(clip02, transform.position);
-                Die();
-            }
-        }
-
-        if (collision.gameObject.CompareTag("KillWall"))
-        {
-            if (m_view.IsMine)
-            {
-                // 壁にぶつかり死んだ時に音を出す
-                AudioSource.PlayClipAtPoint(clip04, transform.position);
                 Die();
             }
         }
@@ -115,7 +101,7 @@ public class FighterController : MonoBehaviour
             if (m_view.IsMine)
             {
                 //壁にぶつかった時の音
-                AudioSource.PlayClipAtPoint(clip03, transform.position);
+                AudioSource.PlayClipAtPoint(clip02, transform.position);
             }
         }
     }
@@ -126,6 +112,9 @@ public class FighterController : MonoBehaviour
     void Die()
     {
         Debug.Log("Die");
+
+        // 壁にぶつかり死んだ時に音を出す
+        AudioSource.PlayClipAtPoint(clip03, transform.position);
 
         // イベントを raise する
         RaiseEventOptions raiseEventoptions = new RaiseEventOptions();
