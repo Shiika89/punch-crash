@@ -16,19 +16,23 @@ public class FighterController : MonoBehaviour
     Rigidbody2D m_rb = null;
     Animator m_anim = null;
     PhotonView m_view = null;
+    GameManager m_gm = null;
 
     /// <summary>パンチの音</summary>
-    [SerializeField] private AudioClip clip01;
+    [SerializeField] AudioClip clip01;
     /// <summary>壁にぶつかる音</summary>
-    [SerializeField] private AudioClip clip02;
-    /// <summary>死んだ音</summary>
-    [SerializeField] private AudioClip clip03;
+    [SerializeField] AudioClip clip02;
+    /// <summary>飛ばされた音</summary>
+    [SerializeField] AudioClip clip03;
+    /// <summary>爆発した音</summary>
+    [SerializeField] AudioClip clip04;
 
     void Start()
     {
         m_rb = GetComponent<Rigidbody2D>();
         m_anim = GetComponent<Animator>();
         m_view = GetComponent<PhotonView>();
+        m_gm = FindObjectOfType<GameManager>();
         ChangeColor();
     }
 
@@ -56,8 +60,11 @@ public class FighterController : MonoBehaviour
     {
         if (!m_view || !m_view.IsMine) return;      // 自分が生成したものだけ処理する
 
-        Vector2 dir = new Vector2(m_h, m_v).normalized;
-        m_rb.AddForce(dir * m_movePower, ForceMode2D.Force);
+        if (m_gm.InGame)
+        {
+            Vector2 dir = new Vector2(m_h, m_v).normalized;
+            m_rb.AddForce(dir * m_movePower, ForceMode2D.Force);
+        }
 
         if (m_rb.velocity != Vector2.zero)
         {
@@ -81,6 +88,18 @@ public class FighterController : MonoBehaviour
         {
             if (m_view.IsMine)
             {
+                // 飛ばされ死んだ時に音を出す
+                AudioSource.PlayClipAtPoint(clip02, transform.position);
+                Die();
+            }
+        }
+
+        if (collision.gameObject.CompareTag("KillWall"))
+        {
+            if (m_view.IsMine)
+            {
+                // 壁にぶつかり死んだ時に音を出す
+                AudioSource.PlayClipAtPoint(clip04, transform.position);
                 Die();
             }
         }
@@ -107,8 +126,7 @@ public class FighterController : MonoBehaviour
         raiseEventoptions.Receivers = ReceiverGroup.All;
         SendOptions sendOptions = new SendOptions();
         PhotonNetwork.RaiseEvent((byte)NetworkEvents.Die, null, raiseEventoptions, sendOptions);
-        // 死んだ時に音を出す
-        AudioSource.PlayClipAtPoint(clip02, transform.position);
+
         // オブジェクトを破棄する
         PhotonNetwork.Destroy(m_view);
     }
