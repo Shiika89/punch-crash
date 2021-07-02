@@ -17,19 +17,18 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     [SerializeField] Transform[] m_obstacleSpawnPoints = default;
     /// <summary>障害物を生成する間隔（秒）</summary>
     [SerializeField] float m_generateObstacleInterval = 1f;
+    /// <summary>勝者を表示する Text</summary>
+    [SerializeField] Text m_winnerText = default;
+    /// <summary>クリックするとシーンをリロードするパネル</summary>
+    [SerializeField] GameObject m_sceneReloadPanel  = default;
     /// <summary>ゲーム中かどうかを判断するフラグ</summary>
     bool m_inGame = false;
     public bool InGame { get { return m_inGame; } }
 
-    PhotonView m_view = null;
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
     //Gameの開始を伝えるTextを入れる
     [SerializeField] Text m_gameStart;
-    //player1が勝った場合のTextを入れる
-    [SerializeField] Text m_p1win;
-    //player2が勝った場合のTextを入れる
-    [SerializeField] Text m_p2win;
     //GameSatrtTextのアニメーション
     Animator m_startTextAnim;
 
@@ -98,7 +97,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     /// </summary>
     void FinishGame(ExitGames.Client.Photon.EventData photonEvent)
     {
-        m_view = GetComponent<PhotonView>();
         m_inGame = false;
 
         // Master Client 側から全ての障害物を破棄する
@@ -106,18 +104,24 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
-        //勝ったほうのプレイヤー（actornumberが１だったらp1そうじゃなければp2{三人以上のでプレイできるようにしたい場合は修正}）の勝利をだしてhitanykeyでシーンをリロードする
-        if (photonEvent.Sender == 2)
+
+        // 勝者を表示する
+        if (photonEvent.Sender == PhotonNetwork.LocalPlayer.ActorNumber)
         {
-            Debug.Log("プレイヤー1win");
-            m_p1win.enabled = true;
+            m_winnerText.text = "You lose!";
         }
         else
         {
-            Debug.Log("プレイヤー2win");
-            m_p2win.enabled = true;
+            m_winnerText.text = "You win!";
         }
+
+        m_sceneReloadPanel.SetActive(true);
     }
+
+    /// <summary>
+    /// シーンをリロードする
+    /// ゲーム終了時、クリックした時に呼び出すために作った
+    /// </summary>
     public void OnClickPanel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
