@@ -117,20 +117,17 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
-        //勝ったほうのプレイヤー（masterだったらp1そうじゃなければp2{三人以上のでプレイできるようにしたい場合は修正}）の勝利をだしてhitanykeyでシーンをリロードする
-        if (m_view.OwnerActorNr == 2)
+        //勝ったほうのプレイヤー（actornumberが１だったらp1そうじゃなければp2{三人以上のでプレイできるようにしたい場合は修正}）の勝利をだしてhitanykeyでシーンをリロードする
+        if (photonEvent.Sender == 2)
         {
             Debug.Log("プレイヤー1win");
-            GameObject obj = (GameObject)Resources.Load("p1winpanel");
-
+            m_p1win.enabled = true;
         }
         else
         {
             Debug.Log("プレイヤー2win");
-            GameObject obj = (GameObject)Resources.Load("p2winpanel");
+            m_p2win.enabled = true;
         }
-        //シーンのリロード
-        Scene loadScene = SceneManager.GetActiveScene();
     }
 
     private void GameBgm()
@@ -154,8 +151,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
-    public void GameStartTextEnd()
+        public void GameStartTextEnd()
     {
         m_gameStart.enabled = false;
     }
