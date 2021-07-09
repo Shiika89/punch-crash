@@ -92,6 +92,7 @@ public class FighterController : MonoBehaviour
         {
             if (m_view.IsMine)
             {
+                PhotonNetwork.Instantiate("explosion", this.transform.position, this.transform.rotation);
                 Die();
             }
         }
