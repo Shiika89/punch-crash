@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     [SerializeField] Text m_gameStart;
     //GameSatrtTextのアニメーション
     Animator m_startTextAnim;
+    [SerializeField] private Cinemachine.CinemachineImpulseSource m_cameraShake = default;
 
     private void OnEnable()
     {
@@ -36,7 +37,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     {
         PhotonNetwork.RemoveCallbackTarget(this);
     }
-
+    public void Start()
+    {
+        //m_cameraShake = GameObject.Find("CM VCam").GetComponent<Cinemachine.CinemachineImpulseSource>();
+    }
     private void Update()
     {
         // Master Client が障害物を生成する
@@ -66,6 +70,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
                 Debug.Log("Finish Game");   // 現時点では二人プレイなので一人死んだらゲームは終わり。三人以上でプレイできるようにした場合は修正する必要がある。
+                CameraShake();
                 FinishGame();
                 break;
             default:
@@ -99,6 +104,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
+    }
+    public void CameraShake()
+    {
+        m_cameraShake.GenerateImpulse();
     }
 }
 
