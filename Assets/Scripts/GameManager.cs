@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     //GameSatrtTextのアニメーション
     Animator m_startTextAnim;
 
+    [SerializeField] private Cinemachine.CinemachineImpulseSource m_cameraShake;
     private void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
@@ -71,6 +72,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
                 Debug.Log("Finish Game");   // 現時点では二人プレイなので一人死んだらゲームは終わり。三人以上でプレイできるようにした場合は修正する必要がある。
+                CameraShake();
                 FinishGame(photonEvent);
                 break;
             default:
@@ -125,6 +127,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     public void OnClickPanel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    void CameraShake()
+    {
+        m_cameraShake.GenerateImpulse();
     }
 }
 
