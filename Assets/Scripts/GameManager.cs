@@ -3,6 +3,7 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// ゲームを管理するコンポーネント
@@ -16,6 +17,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     [SerializeField] Transform[] m_obstacleSpawnPoints = default;
     /// <summary>障害物を生成する間隔（秒）</summary>
     [SerializeField] float m_generateObstacleInterval = 1f;
+    /// <summary>勝者を表示する Text</summary>
+    [SerializeField] Text m_winnerText = default;
+    /// <summary>クリックするとシーンをリロードするパネル</summary>
+    [SerializeField] GameObject m_sceneReloadPanel  = default;
     /// <summary>ゲーム中かどうかを判断するフラグ</summary>
     bool m_inGame = false;
     public bool InGame { get { return m_inGame; } }
@@ -26,7 +31,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     [SerializeField] Text m_gameStart;
     //GameSatrtTextのアニメーション
     Animator m_startTextAnim;
-    [SerializeField] private Cinemachine.CinemachineImpulseSource m_cameraShake = default;
 
     private void OnEnable()
     {
@@ -37,10 +41,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     {
         PhotonNetwork.RemoveCallbackTarget(this);
     }
-    public void Start()
-    {
-        //m_cameraShake = GameObject.Find("CM VCam").GetComponent<Cinemachine.CinemachineImpulseSource>();
-    }
+
     private void Update()
     {
         // Master Client が障害物を生成する
@@ -70,8 +71,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
                 Debug.Log("Finish Game");   // 現時点では二人プレイなので一人死んだらゲームは終わり。三人以上でプレイできるようにした場合は修正する必要がある。
-                CameraShake();
-                FinishGame();
+                FinishGame(photonEvent);
                 break;
             default:
                 break;
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     /// <summary>
     /// ゲームを終了する
     /// </summary>
-    void FinishGame()
+    void FinishGame(ExitGames.Client.Photon.EventData photonEvent)
     {
         m_inGame = false;
 
@@ -104,10 +104,27 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
+
+        // 勝者を表示する
+        if (photonEvent.Sender == PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            m_winnerText.text = "You lose!";
+        }
+        else
+        {
+            m_winnerText.text = "You win!";
+        }
+
+        m_sceneReloadPanel.SetActive(true);
     }
-    public void CameraShake()
+
+    /// <summary>
+    /// シーンをリロードする
+    /// ゲーム終了時、クリックした時に呼び出すために作った
+    /// </summary>
+    public void OnClickPanel()
     {
-        m_cameraShake.GenerateImpulse();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 

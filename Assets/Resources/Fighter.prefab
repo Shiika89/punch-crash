@@ -139,6 +139,7 @@ MonoBehaviour:
   clip01: {fileID: 0}
   clip02: {fileID: 0}
   clip03: {fileID: 0}
+  m_nameText: {fileID: 0}
 --- !u!70 &1250390395860237516
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
