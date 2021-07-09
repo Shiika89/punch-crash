@@ -130,7 +130,10 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     }
     void CameraShake()
     {
-        m_cameraShake.GenerateImpulse();
+        if (!m_cameraShake)
+        {
+            m_cameraShake.GenerateImpulse();
+        }
     }
 }
 
