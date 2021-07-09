@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     //GameSatrtTextのアニメーション
     Animator m_startTextAnim;
 
+    AudioSource m_bgm;
+
     [SerializeField] private Cinemachine.CinemachineImpulseSource m_cameraShake;
     private void OnEnable()
     {
@@ -68,12 +70,14 @@ public class GameManager : MonoBehaviour, IOnEventCallback
                 m_inGame = true;
                 m_startTextAnim = m_gameStart.GetComponent<Animator>();
                 m_startTextAnim.SetTrigger("GameStartText");
+                PlayBgm();
                 break;
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
                 Debug.Log("Finish Game");   // 現時点では二人プレイなので一人死んだらゲームは終わり。三人以上でプレイできるようにした場合は修正する必要がある。
                 CameraShake();
                 FinishGame(photonEvent);
+                PlayBgm();
                 break;
             default:
                 break;
@@ -118,6 +122,19 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         }
 
         m_sceneReloadPanel.SetActive(true);
+    }
+
+    private void PlayBgm()
+    {
+        if (m_inGame)
+        {
+            m_bgm = GetComponent<AudioSource>();
+            m_bgm.Play();
+        }
+        else
+        {
+            m_bgm.Stop();
+        }
     }
 
     /// <summary>
