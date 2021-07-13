@@ -23,12 +23,17 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     [SerializeField] GameObject m_sceneReloadPanel  = default;
     /// <summary>ゲーム中かどうかを判断するフラグ</summary>
     bool m_inGame = false;
+    /// <summary>ゲーム終了処理中だけ立つフラグ</summary>
+    bool m_FinishGame = false;
+
     public bool InGame { get { return m_inGame; } }
 
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
     //Gameの開始を伝えるTextを入れる
     [SerializeField] Text m_gameStart;
+    //プレイヤーを待っていることを伝えるTextを入れる
+    [SerializeField] Text m_waitText;
     //GameSatrtTextのアニメーション
     Animator m_startTextAnim;
 
@@ -58,6 +63,11 @@ public class GameManager : MonoBehaviour, IOnEventCallback
                 m_generateObstacleTimer = 0;
                 GenerateObstacle();
             }
+        }
+
+        if (m_inGame && m_waitText)
+        {
+            Destroy(m_waitText);
         }
     }
 
@@ -104,6 +114,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     void FinishGame(ExitGames.Client.Photon.EventData photonEvent)
     {
         m_inGame = false;
+        m_FinishGame = true;
 
         // Master Client 側から全ての障害物を破棄する
         if (PhotonNetwork.IsMasterClient)
@@ -143,6 +154,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     /// </summary>
     public void OnClickPanel()
     {
+        m_FinishGame = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     void CameraShake()
