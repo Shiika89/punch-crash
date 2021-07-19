@@ -23,14 +23,21 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     [SerializeField] GameObject m_sceneReloadPanel  = default;
     /// <summary>ゲーム中かどうかを判断するフラグ</summary>
     bool m_inGame = false;
+    /// <summary>ゲーム終了処理中だけ立つフラグ</summary>
+    bool m_FinishGame = false;
+
     public bool InGame { get { return m_inGame; } }
 
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
     //Gameの開始を伝えるTextを入れる
     [SerializeField] Text m_gameStart;
+    //プレイヤーを待っていることを伝えるTextを入れる
+    [SerializeField] Text m_waitText;
     //GameSatrtTextのアニメーション
     Animator m_startTextAnim;
+
+    AudioSource m_bgm;
 
     [SerializeField] private Cinemachine.CinemachineImpulseSource m_cameraShake;
     private void OnEnable()
@@ -57,6 +64,11 @@ public class GameManager : MonoBehaviour, IOnEventCallback
                 GenerateObstacle();
             }
         }
+
+        if (m_inGame && m_waitText)
+        {
+            Destroy(m_waitText);
+        }
     }
 
     void IOnEventCallback.OnEvent(ExitGames.Client.Photon.EventData photonEvent)
@@ -68,12 +80,14 @@ public class GameManager : MonoBehaviour, IOnEventCallback
                 m_inGame = true;
                 m_startTextAnim = m_gameStart.GetComponent<Animator>();
                 m_startTextAnim.SetTrigger("GameStartText");
+                PlayBgm();
                 break;
             case (byte)NetworkEvents.Die:
                 Debug.Log("Player " + photonEvent.Sender.ToString() + " died.");
                 Debug.Log("Finish Game");   // 現時点では二人プレイなので一人死んだらゲームは終わり。三人以上でプレイできるようにした場合は修正する必要がある。
                 CameraShake();
                 FinishGame(photonEvent);
+                PlayBgm();
                 break;
             default:
                 break;
@@ -100,6 +114,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     void FinishGame(ExitGames.Client.Photon.EventData photonEvent)
     {
         m_inGame = false;
+        m_FinishGame = true;
 
         // Master Client 側から全ての障害物を破棄する
         if (PhotonNetwork.IsMasterClient)
@@ -120,12 +135,26 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         m_sceneReloadPanel.SetActive(true);
     }
 
+    private void PlayBgm()
+    {
+        if (m_inGame)
+        {
+            m_bgm = GetComponent<AudioSource>();
+            m_bgm.Play();
+        }
+        else
+        {
+            m_bgm.Stop();
+        }
+    }
+
     /// <summary>
     /// シーンをリロードする
     /// ゲーム終了時、クリックした時に呼び出すために作った
     /// </summary>
     public void OnClickPanel()
     {
+        m_FinishGame = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     void CameraShake()
