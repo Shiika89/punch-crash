@@ -258,9 +258,9 @@ GameObject:
   - component: {fileID: 187178957}
   - component: {fileID: 187178956}
   - component: {fileID: 187178958}
-  - component: {fileID: 187178959}
+  - component: {fileID: 187178960}
   m_Layer: 0
-  m_Name: New Timeline
+  m_Name: TitleTimeline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -287,6 +287,8 @@ PlayableDirector:
     value: {fileID: 1664875812}
   - key: {fileID: 0}
     value: {fileID: 0}
+  - key: {fileID: 8988720516779511096, guid: 9826f0eabd4622e469211ee30cd7fe7c, type: 2}
+    value: {fileID: 187178960}
   m_ExposedReferences:
     m_References:
     - b921e98f249a05649bde4fba03c1cfc4: {fileID: 1953236313}
@@ -314,18 +316,18 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187178955}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: d0a58e0a124c8ee4b9105ffd28f1be97, type: 2}
   m_CullingMode: 2
-  m_UpdateMode: 0
+  m_UpdateMode: 1
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &187178959
+--- !u!114 &187178960
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -334,10 +336,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 187178955}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8b47fc3dd98cff4db48df1d7c73cc62, type: 3}
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_waitTime: 5
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: e03d4f9db84ae24468426cbd6a2ee22c, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 187178958}
+          m_MethodName: Play
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: TitleFistAnimation
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &352788391
 GameObject:
   m_ObjectHideFlags: 0
