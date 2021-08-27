@@ -4,6 +4,7 @@ using UnityEngine;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime 用のクラスを継承する
 {
@@ -17,7 +18,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime �
     private void Awake()
     {
         // シーンの自動同期は無効にする（シーン切り替えがない時は意味はない）
-        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.AutomaticallySyncScene = false;
     }
 
     private void Start()
@@ -31,11 +32,28 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime �
     /// </summary>
     private void Connect(string gameVersion)
     {
-        if (PhotonNetwork.IsConnected == false)
+        StartCoroutine(ConnectAsync(gameVersion));
+    }
+
+    IEnumerator ConnectAsync(string gameVersion)
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+
+        while (PhotonNetwork.IsConnected)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        if (!PhotonNetwork.IsConnected)
         {
             PhotonNetwork.GameVersion = gameVersion;    // 同じバージョンを指定したもの同士が接続できる
             PhotonNetwork.ConnectUsingSettings();
         }
+
+        yield return null;
     }
 
     /// <summary>
