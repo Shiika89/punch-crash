@@ -5,6 +5,7 @@ using Photon.Pun;
 public class PunchController : MonoBehaviour
 {
     [SerializeField] float m_punchPower = 5f;
+    public float Punch { get { return m_punchPower; } set { m_punchPower = value; } }
     PhotonView m_view = null;
 
     void Start()

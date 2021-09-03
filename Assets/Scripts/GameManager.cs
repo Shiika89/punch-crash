@@ -13,10 +13,16 @@ public class GameManager : MonoBehaviour, IOnEventCallback
 {
     /// <summary>障害物となるプレハブの名前</summary>
     [SerializeField] string m_obstaclePrefabName = "Obstacle Prefab";
+    /// <summary>アイテムとなるプレハブの名前</summary>
+    [SerializeField] string m_itemPrefabName = "ItemFist Prefab";
     /// <summary>障害物を生成する位置</summary>
     [SerializeField] Transform[] m_obstacleSpawnPoints = default;
+    /// <summary>アイテムを生成する位置</summary>
+    [SerializeField] Transform[] m_itemSpawnPoints = default;
     /// <summary>障害物を生成する間隔（秒）</summary>
     [SerializeField] float m_generateObstacleInterval = 1f;
+    /// <summary>アイテムを生成する間隔（秒）</summary>
+    [SerializeField] float m_generateItemInterval = 10f;
     /// <summary>勝者を表示する Text</summary>
     [SerializeField] Text m_winnerText = default;
     /// <summary>クリックするとシーンをリロードするボタン</summary>
@@ -34,6 +40,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     public bool InGame { get { return m_inGame; } }
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
+    /// <summary>アイテム生成のためのタイマー</summary>
+    float m_generateItemTimer;
     //Gameの開始を伝えるTextを入れる
     [SerializeField] Text m_gameStart;
     //プレイヤーを待っていることを伝えるTextを入れる
@@ -65,6 +73,18 @@ public class GameManager : MonoBehaviour, IOnEventCallback
             {
                 m_generateObstacleTimer = 0;
                 GenerateObstacle();
+            }
+        }
+
+        // Master Client がアイテムを生成する
+        if (PhotonNetwork.IsMasterClient && m_inGame)
+        {
+            m_generateItemTimer += Time.deltaTime;
+
+            if (m_generateItemTimer > m_generateItemInterval)
+            {
+                m_generateItemTimer = 0;
+                GenerateItem();
             }
         }
 
@@ -120,6 +140,19 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             var go = PhotonNetwork.Instantiate(m_obstaclePrefabName, m_obstacleSpawnPoints[i].position, Quaternion.identity);
             go.transform.Rotate(Vector3.forward, Random.Range(0, 360f));
+        }
+    }
+
+    /// <summary>
+    /// アイテムを生成する
+    /// </summary>
+    void GenerateItem()
+    {
+        int i = Random.Range(0, m_itemSpawnPoints.Length);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            var go = PhotonNetwork.Instantiate(m_itemPrefabName, m_itemSpawnPoints[i].position, Quaternion.identity);            
         }
     }
 

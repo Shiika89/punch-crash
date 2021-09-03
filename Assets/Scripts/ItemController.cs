@@ -35,4 +35,14 @@ public class ItemController : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Punch")
+        {
+            var punch = collision.GetComponent<PunchController>();
+            punch.Punch += 5;
+            Destroy(gameObject);
+        }
+    }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - KillZone
   - Obstacle
+  - Punch
   layers:
   - Default
   - TransparentFX
