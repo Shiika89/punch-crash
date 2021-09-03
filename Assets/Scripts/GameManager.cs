@@ -19,15 +19,17 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     [SerializeField] float m_generateObstacleInterval = 1f;
     /// <summary>勝者を表示する Text</summary>
     [SerializeField] Text m_winnerText = default;
-    /// <summary>クリックするとシーンをリロードするパネル</summary>
-    [SerializeField] GameObject m_sceneReloadPanel  = default;
+    /// <summary>クリックするとシーンをリロードするボタン</summary>
+    [SerializeField] GameObject m_sceneReloadButton = default;
+    /// <summary>buttonが画面に出るまでの時間</summary>
+    [SerializeField] float m_buttonPopTime = 2f;
     /// <summary>ゲーム中かどうかを判断するフラグ</summary>
     bool m_inGame = false;
-    /// <summary>ゲーム終了処理中だけ立つフラグ</summary>
-    bool m_FinishGame = false;
-
+    /// <summary>ゲームが終了したことを検知するフラグ</summary>
+    bool m_finishFlag = false;
+    /// <summary>時間を覚えとく変数</summary>
+    float m_rememberTime = default;
     public bool InGame { get { return m_inGame; } }
-
     /// <summary>障害物生成のためのタイマー</summary>
     float m_generateObstacleTimer;
     //Gameの開始を伝えるTextを入れる
@@ -68,6 +70,18 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         if (m_inGame && m_waitText)
         {
             Destroy(m_waitText);
+        }
+
+        if (m_finishFlag == true)
+        {
+            m_rememberTime += Time.deltaTime;
+            if (m_rememberTime > m_buttonPopTime)
+            {
+                Debug.Log("ボタンを表示する");
+                m_sceneReloadButton.SetActive(true);
+
+                m_rememberTime = 0;
+            }
         }
     }
 
@@ -114,8 +128,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     void FinishGame(ExitGames.Client.Photon.EventData photonEvent)
     {
         m_inGame = false;
-        m_FinishGame = true;
-
+        m_finishFlag = true;
         // Master Client 側から全ての障害物を破棄する
         if (PhotonNetwork.IsMasterClient)
         {
@@ -131,8 +144,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             m_winnerText.text = "You win!";
         }
-
-        m_sceneReloadPanel.SetActive(true);
+        
     }
 
     private void PlayBgm()
@@ -154,8 +166,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     /// </summary>
     public void OnClickPanel()
     {
-        m_FinishGame = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("Title");
+        m_finishFlag = false;
     }
     void CameraShake()
     {
@@ -165,6 +177,7 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         }
     }
 }
+
 
 public enum NetworkEvents : byte
 {
