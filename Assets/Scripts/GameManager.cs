@@ -135,17 +135,19 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         {
             GameObject.FindGameObjectsWithTag("Obstacle").ToList().ForEach(go => PhotonNetwork.Destroy(go));
         }
-
-        // 勝者を表示する
-        if (photonEvent.Sender == PhotonNetwork.LocalPlayer.ActorNumber && !m_diePlayer)
+        if (!m_diePlayer)
         {
-            m_winnerText.text = "You lose!";
-        }
-        else if(photonEvent.Sender != PhotonNetwork.LocalPlayer.ActorNumber && !m_diePlayer)
-        {
-            m_winnerText.text = "You win!";
-        }
-        m_diePlayer = true;
+            // 勝者を表示する
+            if (photonEvent.Sender == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                m_winnerText.text = "You lose!";
+            }
+            else
+            {
+                m_winnerText.text = "You win!";
+            }
+            m_diePlayer = true;
+        }               
     }
 
     private void PlayBgm()
