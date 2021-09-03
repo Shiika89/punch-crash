@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour, IOnEventCallback
     bool m_inGame = false;
     /// <summary>ゲームが終了したことを検知するフラグ</summary>
     bool m_finishFlag = false;
+    /// <summary>Playerが死亡したことを検知するフラグ</summary>
+    bool m_diePlayer = false;
     /// <summary>時間を覚えとく変数</summary>
     float m_rememberTime = default;
     public bool InGame { get { return m_inGame; } }
@@ -58,7 +60,6 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         if (PhotonNetwork.IsMasterClient && m_inGame)
         {
             m_generateObstacleTimer += Time.deltaTime;
-
 
             if (m_generateObstacleTimer > m_generateObstacleInterval)
             {
@@ -136,15 +137,15 @@ public class GameManager : MonoBehaviour, IOnEventCallback
         }
 
         // 勝者を表示する
-        if (photonEvent.Sender == PhotonNetwork.LocalPlayer.ActorNumber)
+        if (photonEvent.Sender == PhotonNetwork.LocalPlayer.ActorNumber && !m_diePlayer)
         {
             m_winnerText.text = "You lose!";
         }
-        else
+        else if(photonEvent.Sender != PhotonNetwork.LocalPlayer.ActorNumber && !m_diePlayer)
         {
             m_winnerText.text = "You win!";
         }
-        
+        m_diePlayer = true;
     }
 
     private void PlayBgm()
